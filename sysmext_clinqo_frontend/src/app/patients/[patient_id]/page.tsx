@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import Link from "next/link"
+import AddSampleForm from "@/components/AddSampletoPatient"
 
 interface TestResult {
   value: number
@@ -265,47 +266,8 @@ export default function PatientPage() {
         </div>
 
         {/* Add New Sample Section */}
-        <div className="bg-white rounded-2xl shadow-xl border border-green-100 overflow-hidden hover:shadow-2xl transition-shadow duration-300">
-          <div className="p-8">
-            <div className="flex items-center mb-6">
-              <div className="w-3 h-10 bg-gradient-to-b from-green-500 to-emerald-500 rounded-full mr-4"></div>
-              <h2 className="text-2xl font-semibold text-green-800">Add New Sample</h2>
-            </div>
-
-            <div className="bg-green-50/50 rounded-xl p-6 border border-green-100">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="flex-1">
-                  <label className="block text-sm font-semibold text-green-700 uppercase tracking-wide mb-2">
-                    Sample ID <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-3 border-2 border-green-200 rounded-xl focus:border-green-500 focus:outline-none transition-all duration-200 bg-white placeholder-green-600/60 text-green-900 font-medium hover:border-green-300"
-                    placeholder="Enter new sample ID"
-                    value={newSampleId}
-                    onChange={(e) => setNewSampleId(e.target.value)}
-                  />
-                </div>
-                <div className="flex items-end">
-                  <button
-                    onClick={handleAddSample}
-                    disabled={submitting || !newSampleId.trim()}
-                    className="px-8 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-emerald-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center"
-                  >
-                    {submitting ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-3"></div>
-                        Adding...
-                      </>
-                    ) : (
-                      <>Add Sample</>
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
+        <div className="bg-white rounded-2xl shadow-xl border border-green-100 overflow-hidden hover:shadow-2xl transition-shadow duration-300 w-[100vw]">
+          <AddSampleForm patient_id={patient.patient_id} />
           {/* Footer Info */}
           <div className="bg-gradient-to-r from-green-100 to-emerald-100 px-8 py-4">
             <div className="flex items-center text-sm text-green-700">

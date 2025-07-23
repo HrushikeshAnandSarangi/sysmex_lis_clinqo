@@ -18,7 +18,7 @@ class Patient(models.Model):
 class Sample(models.Model):
     sample_id = models.CharField(max_length=30, unique=True)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='samples')
-    test_details = models.JSONField()  # You’ll populate this via listener/parser later
+    test_details = models.JSONField(help_text="Format: {'Parameter': 'Result'}")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

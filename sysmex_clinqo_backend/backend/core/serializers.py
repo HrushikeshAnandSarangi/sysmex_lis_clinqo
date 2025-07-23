@@ -19,6 +19,7 @@ class SampleSerializer(serializers.ModelSerializer):
 
 
 class PatientCreateSerializer(serializers.Serializer):
+    # Patient fields
     patient_id = serializers.CharField()
     sample_id = serializers.CharField()
     name = serializers.CharField()
@@ -30,23 +31,34 @@ class PatientCreateSerializer(serializers.Serializer):
     district = serializers.CharField()
     address = serializers.CharField()
 
-    def create(self, validated_data):
-        patient_id = validated_data.pop('patient_id')
-        sample_id = validated_data.pop('sample_id')
+    # New field to allow passing test results
+    test_details = serializers.DictField( required=False)
 
-        # Get or create the patient
+    def validate_test_results(self, value):
+        if not isinstance(value, dict):
+            raise serializers.ValidationError("Test results must be a dictionary of parameter: value.")
+        return value
+
+    def create(self, validated_data):
+        patient_id = validated_data.pop('patient_id',{})
+        sample_id = validated_data.pop('sample_id')
+        test_details = validated_data.pop('test_details')
+
+        # Create or get patient
         patient, _ = Patient.objects.get_or_create(
             patient_id=patient_id,
-            defaults={
-                **validated_data
-            }
+            defaults=validated_data
         )
 
-        # Always create a new Sample for this request
+        # Check for duplicate sample
+        if Sample.objects.filter(sample_id=sample_id).exists():
+            raise serializers.ValidationError(f"Sample with ID '{sample_id}' already exists.")
+
+        # Create the sample with test results
         Sample.objects.create(
             sample_id=sample_id,
             patient=patient,
-            test_details={}  # Initially empty
+            test_details=test_details
         )
 
         return patient
